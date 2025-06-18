@@ -1,27 +1,27 @@
-#importing neccessary libraries
+# Step 1: importing neccessary libraries
 import numpy as np 
 import pandas as pd 
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics.pairwise import cosine_similarity
 
 # Step 2: Load and Preprocess the Dataset
-df = pd.read_csv("Dataset.csv") 
+data = pd.read_csv("Dataset.csv") 
 
 # Drop missing values in key columns
-df = df.dropna(subset=['Cuisines'])
+data = data.dropna(subset=['Cuisines'])
 
-# Encode categorical columns
+# Encoding categorical columns using LabelEncoder
 le = LabelEncoder()
-df['Cuisines'] = le.fit_transform(df['Cuisines'])
-df['City'] = le.fit_transform(df['City'])
-df['Currency'] = le.fit_transform(df['Currency'])
-df['Has Online delivery'] = le.fit_transform(df['Has Online delivery'])
-df['Price range'] = df['Price range'].astype(int)
+data['Cuisines'] = le.fit_transform(data['Cuisines'])
+data['City'] = le.fit_transform(data['City'])
+data['Currency'] = le.fit_transform(data['Currency'])
+data['Has Online delivery'] = le.fit_transform(data['Has Online delivery'])
+data['Price range'] = data['Price range'].astype(int)
 
-# Step 3: Select Features for Recommendation Criteria
-features = df[['Cuisines', 'City', 'Price range', 'Has Online delivery']]
+# Step 3: Selecting Features for Recommendation Criteria
+features = data[['Cuisines', 'City', 'Price range', 'Has Online delivery']]
 
-# Step 4: Compute Similarity Matrix (Content-Based Filtering)
+# Step 4: Computing Similarity Matrix (Content-Based Filtering)
 similarity_matrix = cosine_similarity(features)
 
 # Step 5: Recommendation Function Based on Restaurant Index
@@ -30,12 +30,12 @@ def recommend_restaurants_by_index(index, num_recommendations=5):
     sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
     recommendations = []
     for i, score in sorted_scores[1:num_recommendations+1]:  # This will skip the same restaurant
-        recommendations.append((df.iloc[i]['Restaurant Name'], round(score, 2)))
+        recommendations.append((data.iloc[i]['Restaurant Name'], round(score, 2)))
     return recommendations
 
 # Test the system with a sample restaurant index
 sample_index = 10
-print(f"\nUser likes: {df.iloc[sample_index]['Restaurant Name']}")
+print(f"\nUser likes: {data.iloc[sample_index]['Restaurant Name']}")
 print("Top 5 similar restaurants based on content:")
 for name, score in recommend_restaurants_by_index(sample_index):
     print(f"{name} | Similarity Score: {score}")
@@ -64,4 +64,4 @@ sorted_scores = sorted(scores, key=lambda x: x[1], reverse=True)
 # Display top 5 recommendations
 print("\nTop 5 restaurant recommendations based on user preferences:")
 for i, score in sorted_scores[:5]:
-    print(f"{df.iloc[i]['Restaurant Name']} | Score: {round(score, 2)}")
+    print(f"{data.iloc[i]['Restaurant Name']} | Score: {round(score, 2)}")
