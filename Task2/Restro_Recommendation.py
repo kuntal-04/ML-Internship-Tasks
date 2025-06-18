@@ -12,10 +12,11 @@ data = data.dropna(subset=['Cuisines'])
 
 # Encoding categorical columns using LabelEncoder
 le = LabelEncoder()
-data['Cuisines'] = le.fit_transform(data['Cuisines'])
-data['City'] = le.fit_transform(data['City'])
-data['Currency'] = le.fit_transform(data['Currency'])
-data['Has Online delivery'] = le.fit_transform(data['Has Online delivery'])
+categorical_cols = ['Cuisines', 'City', 'Currency', 'Has Online delivery']
+
+for col in categorical_cols:
+    data[col] = le.fit_transform(data[col])
+
 data['Price range'] = data['Price range'].astype(int)
 
 # Step 3: Selecting Features for Recommendation Criteria
@@ -47,7 +48,7 @@ user_city = 'Makati City'
 user_price = 3
 user_delivery = 'Yes'
 
-# Encode user input to match dataset encoding
+# Encoding user input to match dataset encoding 
 user_cuisine_encoded = le.transform([user_cuisine])[0] if user_cuisine in le.classes_ else 0
 user_city_encoded = le.transform([user_city])[0] if user_city in le.classes_ else 0
 user_delivery_encoded = 1 if user_delivery.lower() == 'yes' else 0
