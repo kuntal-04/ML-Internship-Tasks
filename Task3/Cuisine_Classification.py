@@ -1,9 +1,12 @@
 # Step 1: Importing necessary libraries 
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import confusion_matrix
 
 # Step 2: Load the dataset
 data = pd.read_csv("Dataset.csv")
@@ -65,3 +68,13 @@ print("Model Accuracy:", round(accuracy * 100, 2), "%")
 # Classification report
 print("\nClassification Report:\n")
 print(classification_report(y_test, y_pred))
+
+#Step 10: Generate confusion matrix
+cm = confusion_matrix(y_test, y_pred)
+
+plt.figure(figsize=(12, 8))
+sns.heatmap(cm, cmap='Blues', xticklabels=False, yticklabels=False)
+plt.title("Confusion Matrix")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
